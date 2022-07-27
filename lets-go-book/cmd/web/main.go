@@ -9,6 +9,14 @@ func main() {
 	// Use the http.NewServeMux() function to initialize a new servemux, then
 	// register the home function as the handler for the "/" url pattern
 	mux := http.NewServeMux()
+
+	// Create a file server which serves files out of the "./ui/static" dir
+	fileServer := http.FileServer(http.Dir("./ui/static/"))
+
+	// Use mux.Handle() to register the file server
+	mux.Handle("/static/", http.StripPrefix("/static", fileServer))
+
+	// Register the other routes
 	mux.HandleFunc("/", home)
 	mux.HandleFunc("/snippet/view", snippetView)
 	mux.HandleFunc("/snippet/create", snippetCreate)
